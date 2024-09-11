@@ -1,11 +1,11 @@
 # bdanmaku
 
 [mpv](https://mpv.io) plugin to correctly display Bilibili danmaku.
-Powered by [biliass](https://github.com/yutto-dev/biliass).
+Powered by [DanmakuFactory](https://github.com/hihkm/DanmakuFactory).
 
 ## Installation
 
-First, [install biliass](https://github.com/yutto-dev/biliass#install).
+First, [install DanmakuFactory](https://github.com/hihkm/DanmakuFactory?tab=readme-ov-file#%E8%8E%B7%E5%8F%96).
 Then, see [mpv documentation](https://mpv.io/manual/stable/#script-location) for how to run the script in mpv.
 
 ## Usage
@@ -21,24 +21,20 @@ mpv https://www.bilibili.com/video/BV1Sm4y1N78J
 ## Configuration
 
 You can configure the plugin by setting the `script-opts` option in mpv.
-Set the biliass executable by setting the `biliass_executable` option like this:
+Set the DanmakuFactory executable by setting the `dmk2ass_executable` option like this:
 
 ```shell
-mpv --script-opts=biliass_executable=/path/to/biliass https://www.bilibili.com/video/BV1Sm4y1N78J
+mpv --script-opts=dmk2ass_executable=/path/to/DanmakuFactory https://www.bilibili.com/video/BV1Sm4y1N78J
 ```
 
-You can also set the `biliass_options` option to pass additional options to biliass.
-For example, if you want to make the opacity of danmaku to 0.1, you can do this:
+You can also set the `dmk2ass_options` option to pass additional options to DanmakuFactory.
+For example, if you want to make the opacity(range: 1-255) of danmaku to 32, you can do this:
 
 ```shell
-mpv --script-opts=biliass_options=-a\ 0.1 https://www.bilibili.com/video/BV1Sm4y1N78J
+mpv --script-opts=dmk2ass_options=-O\ 32 https://www.bilibili.com/video/BV1Sm4y1N78J
 ```
 
 ## Notice for Windows users
 
 You have to specify the `tmpdir` option on Windows (e.g. `--script-opts=tmpdir=C:\tmp`).
 Otherwise, downloading danmaku will fail.
-
-Because of a [bug](https://github.com/yutto-dev/biliass/issues/28) of biliass on Windows,
-you may see errors about decoding danmaku files.
-Install [@Mark-Joy's fork](https://github.com/Mark-Joy/biliass) instead to fix this.

@@ -4,11 +4,11 @@
 
 table.unpack = table.unpack or unpack -- 5.1 compatibility
 local CURL = mp.get_opt('curl_executable') or 'curl'
-local BILIASS = mp.get_opt('biliass_executable') or 'biliass'
+local DMK2ASS = mp.get_opt('dmk2ass_executable') or 'DanmakuFactory'
 local TMPDIR = mp.get_opt('tmpdir') or '/tmp/danmaku'
-local BILIASS_OPTS = {}
-for token in (mp.get_opt('biliass_options') or '--fontsize 48 --alpha 0.5 --protect 270 --duration-marquee 10'):gmatch('[^%s]+') do
-	BILIASS_OPTS[#BILIASS_OPTS + 1] = token
+local DMK2ASS_OPTS = {}
+for token in (mp.get_opt('dmk2ass_options') or '--density -1 --opacity 97 --outline 1 --shadow 0 --bold TRUE'):gmatch('[^%s]+') do
+	DMK2ASS_OPTS[#DMK2ASS_OPTS + 1] = token
 end
 local utils = require 'mp.utils'
 
@@ -58,15 +58,16 @@ function replace_sub()
 	end
 	local resolution = width..'x'..height
 	local ass_filename = TMPDIR..'/'..mp.get_property('pid')..'.ass'
-	local biliass_args = {
-		BILIASS, xml_filename,
-		'--size', resolution,
+	local dmk2ass_args = {
+		DMK2ASS,
 		'--output', ass_filename,
-		table.unpack(BILIASS_OPTS)
+		'--input', xml_filename,
+		'--resolution', resolution,
+		table.unpack(DMK2ASS_OPTS)
 	}
-	mp.msg.debug('biliass_command: '..table.concat(biliass_args, ' '))
-	local biliass_result = utils.subprocess({args = biliass_args})
-	if biliass_result.status == 0 then
+	mp.msg.debug('dmk2ass_command: '..table.concat(dmk2ass_args, ' '))
+	local dmk2ass_result = utils.subprocess({args = dmk2ass_args})
+	if dmk2ass_result.status == 0 then
 		local sid = mp.get_property('track-list/'..danmaku_track_id..'/id')
 		mp.msg.debug('deleting original subtitle sid='..sid)
 		mp.commandv('sub-remove', sid)
@@ -79,7 +80,7 @@ function replace_sub()
 			end
 		end
 	else
-		mp.msg.warn('converting XML danmaku from '..xml_filename..' to '..ass_filename..' failed: '..biliass_result.error)
+		mp.msg.warn('converting XML danmaku from '..xml_filename..' to '..ass_filename..' failed: '..dmk2ass_result.error)
 	end
 end
 
